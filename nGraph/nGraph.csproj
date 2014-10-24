@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{97A0DFA1-DF0F-4B8B-816E-E523CDEF0DAA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>nGraph</RootNamespace>
+    <AssemblyName>nGraph</AssemblyName>
+    <SignAssembly>false</SignAssembly>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\nGraph.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\nGraph.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdjacencyList.cs" />
+    <Compile Include="BaseGraphAlgorithm.cs" />
+    <Compile Include="BaseNodeData.cs" />
+    <Compile Include="BFS.cs" />
+    <Compile Include="BinaryTree.cs" />
+    <Compile Include="BinaryTreeNode.cs" />
+    <Compile Include="BinaryTreeNodeEventArgs.cs" />
+    <Compile Include="Collections\SetCountComparer.cs" />
+    <Compile Include="ComputeCompletedEventArgs.cs" />
+    <Compile Include="DFS.cs" />
+    <Compile Include="Edge.cs" />
+    <Compile Include="EdgeEventArgs.cs" />
+    <Compile Include="Graph.cs" />
+    <Compile Include="Interfaces\IAdjacencyList.cs" />
+    <Compile Include="Interfaces\IBinaryTree.cs" />
+    <Compile Include="Interfaces\IBinaryTreeNode.cs" />
+    <Compile Include="Interfaces\IEdge.cs" />
+    <Compile Include="Interfaces\IEdgeFactory.cs" />
+    <Compile Include="Interfaces\IGraph.cs" />
+    <Compile Include="Interfaces\IGraphAlgorithm.cs" />
+    <Compile Include="Interfaces\INodeData.cs" />
+    <Compile Include="Interfaces\IWeighted.cs" />
+    <Compile Include="Interfaces\INode.cs" />
+    <Compile Include="NodeEventArgs.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Node.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="LICENSE.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
