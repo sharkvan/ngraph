@@ -70,12 +70,12 @@ namespace nGraph
 
                 OnNodeEntered(u);
 
-                BFSNodeData<T> bvu = Graph.GetProperties(u)[NodeDataType] as BFSNodeData<T>;
+                BFSNodeData<T> bvu = GetNodeData<BFSNodeData<T>>(u);
                 ISet<T> nodeList = Graph.Adjacent(u);
                 foreach (T adjacent in nodeList)
                 {
                     OnEdgeDiscovered(Graph[u, adjacent]);
-                    BFSNodeData<T> bvv = Graph.GetProperties(adjacent)[NodeDataType] as BFSNodeData<T>;
+                    BFSNodeData<T> bvv = GetNodeData<BFSNodeData<T>>(adjacent);
                     if (bvv != null && bvv.Color == Color.White)
                     {
                         bvv.Color = Color.Gray;
@@ -104,13 +104,10 @@ namespace nGraph
                 IList<BFSNodeData<T>> results = new List<BFSNodeData<T>>();
                 foreach (T n in Graph.Vertices)
                 {
-                    if (Graph.GetProperties(n).ContainsKey(NodeDataType))
+                    BFSNodeData<T> nodeData = GetNodeData<BFSNodeData<T>>(n);
+                    if (nodeData != null)
                     {
-                        BFSNodeData<T> nodeData = Graph.GetProperties(n)[NodeDataType] as BFSNodeData<T>;
-                        if (nodeData != null)
-                        {
-                            results.Add(nodeData);
-                        }
+                        results.Add(nodeData);
                     }
                 }
                 return results;

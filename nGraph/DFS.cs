@@ -18,7 +18,8 @@ namespace nGraph
     public class DFS<T> : BaseGraphAlgorithm<T> where T : IComparable<T>
     {
         private int _time = 0;
-        private Type NodeDataType = typeof(DFSNodeData<T>);
+        private T _startNode;
+        private bool _useStartNode = false;
 
         /// <summary>
         /// 
@@ -35,7 +36,8 @@ namespace nGraph
         /// <param name="s"></param>
         public override void SetStartNode(T s)
         {
-            //We don't set a start node for Depth-first search.
+            _startNode = s;
+            _useStartNode = true;
         }
 
         /// <summary>
@@ -43,24 +45,36 @@ namespace nGraph
         /// </summary>
         public override void Compute()
         {
-            ISet<T> nodes = Graph.Vertices;
+            ISet<T> nodes= Graph.Vertices;
+
             foreach (T u in nodes)
-            {
                 SetNodeData(u, new DFSNodeData<T>(u, Color.White));
-            }
 
             _time = 0;
+            if (_useStartNode)
+            {
+                DFSNodeData<T> uData = GetNodeData<DFSNodeData<T>>(_startNode);
+
+                //this is the actual discovery
+                if (uData != null && uData.Color == Color.White)
+                {
+                    OnNodeDiscovered(_startNode);
+                    Visit(_startNode, uData);
+                }
+            }
+
             foreach (T u in nodes)
             {
-                DFSNodeData<T> uData = Graph.GetProperties(u)[NodeDataType] as DFSNodeData<T>;
-                
-				//this is the actual discovery
-				if (uData != null && uData.Color == Color.White)
+                DFSNodeData<T> uData = GetNodeData<DFSNodeData<T>>(u);
+
+                //this is the actual discovery
+                if (uData != null && uData.Color == Color.White)
                 {
                     OnNodeDiscovered(u);
                     Visit(u, uData);
                 }
             }
+
             OnComputeCompleted();
         }
 
@@ -80,9 +94,9 @@ namespace nGraph
             foreach (T discovered in adjNodes)
             {
                 OnEdgeDiscovered(Graph[entered, discovered]);
-                DFSNodeData<T> vData = (DFSNodeData<T>)Graph.GetProperties(discovered)[NodeDataType];
-                
-				if (vData.Color == Color.White)
+                DFSNodeData<T> vData = GetNodeData<DFSNodeData<T>>(discovered);
+
+                if (vData.Color == Color.White)
                 {
                     vData.Predecessor = entered;
                     OnNodeDiscovered(discovered);
@@ -106,13 +120,10 @@ namespace nGraph
                 IList<DFSNodeData<T>> results = new List<DFSNodeData<T>>();
                 foreach (T n in Graph.Vertices)
                 {
-                    if (Graph.GetProperties(n).ContainsKey(NodeDataType))
+                    DFSNodeData<T> nodeData = GetNodeData<DFSNodeData<T>>(n);
+                    if (nodeData != null)
                     {
-                        DFSNodeData<T> nodeData = Graph.GetProperties(n)[NodeDataType] as DFSNodeData<T>;
-                        if (nodeData != null)
-                        {
-                            results.Add(nodeData);
-                        }
+                        results.Add(nodeData);
                     }
                 }
                 return results;
@@ -120,7 +131,7 @@ namespace nGraph
         }
     }
 
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -194,7 +205,7 @@ namespace nGraph
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format("Node: {0}, Color: {1}, Predecessor: {2}, Discovered: {3}, Finished: {4}", 
+            return String.Format("Node: {0}, Color: {1}, Predecessor: {2}, Discovered: {3}, Finished: {4}",
                 Node, Color, Predecessor, Discovered, Finished);
         }
     }

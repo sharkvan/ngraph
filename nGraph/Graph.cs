@@ -149,17 +149,11 @@ namespace nGraph
         {
             get
             {
-                HashSet<IEdge<T>> edgeSet = new HashSet<IEdge<T>>();
                 if (Nodes.ContainsKey(u.Key))
                 {
-                    INode<T> node = Nodes[u.Key];
-                    node
-                        .EdgeSet
-                        .AsParallel<IEdge<T>>()
-                        .ForAll<IEdge<T>>(
-                            i => edgeSet.Add(i));
+                    return Nodes[u.Key].EdgeSet;
                 }
-                return edgeSet;
+                return new HashSet<IEdge<T>>();
             }
         }
 
@@ -261,16 +255,10 @@ namespace nGraph
         {
             get
             {
-                HashSet<IEdge<T>> edgeSet = new HashSet<IEdge<T>>();
-                foreach (INode<T> n in Nodes.Values)
-                {
-                    n.EdgeSet
-                        .AsParallel<IEdge<T>>()
-                        .ForAll<IEdge<T>>(
-                            i => edgeSet.Add(i)
-                        );
-                }
-                return edgeSet;
+                return new HashSet<IEdge<T>>(Nodes.Values
+                    .SelectMany(
+                        n => n.EdgeSet
+                        ));
             }
         }
 
@@ -287,14 +275,11 @@ namespace nGraph
             if (this.Contains(u))
             {
                 INode<T> uNode = Nodes[u];
-                HashSet<T> adjacentSet = new HashSet<T>();
 
-                uNode.AdjacentNodes.AsParallel().ForAll(i => adjacentSet.Add(i.Key));
-
-                return adjacentSet;
+                return new HashSet<T>(uNode.AdjacentNodes.Select(i => i.Key));
             }
 
-            return null;
+            return new HashSet<T>();
         }
 
         /// <summary>

@@ -18,7 +18,8 @@ namespace nGraph
     abstract public class BaseGraphAlgorithm<T> : IGraphAlgorithm<T> where T : IComparable<T>
     {
         private IGraph<T> _graph;
-        
+        private IDictionary<T, INodeData<T>> _nodeData;
+
         /// <summary>
         /// Notifies subscribers that a node was entered. <see cref="INode"/>
         /// </summary>
@@ -60,6 +61,7 @@ namespace nGraph
                 throw new ArgumentNullException("graph");
             }
             _graph = graph;
+            _nodeData = new Dictionary<T, INodeData<T>>();
         }
 
         /// <summary>
@@ -150,7 +152,7 @@ namespace nGraph
         /// <param name="edge"></param>
         protected void OnEdgeDiscovered(IEdge<T> edge)
         {
-            EventHandler <EdgeEventArgs<T>> temp = EdgeDiscovered;
+            EventHandler<EdgeEventArgs<T>> temp = EdgeDiscovered;
             if (temp != null)
             {
                 temp(this, new EdgeEventArgs<T>(edge));
@@ -214,11 +216,7 @@ namespace nGraph
             //  within the Properties container that the algorithms store their 
             //  various structures (e.g. graph coloring, etc.).
             //
-            ISet<T> nodes = Graph.Vertices;
-            foreach (T u in nodes)
-            {
-                Graph.GetProperties(u).Clear();
-            }
+            _nodeData.Clear();
         }
 
         /// <summary>
@@ -228,14 +226,7 @@ namespace nGraph
         /// <param name="data"></param>
         protected void SetNodeData<TNodeDataType>(INode<T> node, TNodeDataType data) where TNodeDataType : INodeData<T>
         {
-            if (node.Properties.ContainsKey(data.GetType()))
-            {
-                node.Properties[data.GetType()] = data;
-            }
-            else
-            {
-                node.Properties.Add(data.GetType(), data);
-            }
+            SetNodeData(node.Key, data);
         }
 
         /// <summary>
@@ -246,10 +237,26 @@ namespace nGraph
         /// <param name="data"></param>
         protected void SetNodeData<TNodeDataType>(T u, TNodeDataType data) where TNodeDataType : INodeData<T>
         {
-            INode<T> iNode = Graph.GetNode(u);
-            SetNodeData(iNode, data);
+            if (_nodeData.ContainsKey(u))
+                _nodeData[u] = data;
+            else
+                _nodeData.Add(u, data);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TNodeDataType"></typeparam>
+        /// <param name="u"></param>
+        /// <returns></returns>
+        protected TNodeDataType GetNodeData<TNodeDataType>(T u)
+            where TNodeDataType : INodeData<T>
+        {
+            if (_nodeData.ContainsKey(u))
+                return (TNodeDataType)_nodeData[u];
+
+            return default(TNodeDataType);
+        }
         #endregion
     }
 }
